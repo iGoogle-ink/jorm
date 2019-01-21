@@ -8,6 +8,7 @@ package jorm
 import (
 	"fmt"
 	"testing"
+	"time"
 )
 
 /*
@@ -47,11 +48,11 @@ func TestCallProcedure(t *testing.T) {
 		fmt.Println("contact:", contact)
 	}
 
-	//result, err := CallProcedure("p_cashier_plateno_query").ParamsLen(3, 0).Query(time.Now(), "rCQRNqop-8klAy", "沪AD1234")
-	//if err != nil {
-	//	fmt.Println("err:", err)
-	//}
-	//for _, v := range result {
-	//	fmt.Println(v)
-	//}
+	result, err := CallProcedure("p_cashier_plateno_query", 3, 0).Query(time.Now(), "rCQRNqop-8klAy", "沪AD1234")
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	for _, v := range result {
+		fmt.Println(v)
+	}
 }

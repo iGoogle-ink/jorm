@@ -21,35 +21,32 @@ type procedure struct {
 	params   string
 }
 
-func CallProcedure(funcName string) (proc *procedure) {
-	proc = new(procedure)
-	proc.engine = engine
-	proc.funcName = funcName
-	return
-}
-
 //设置参数
-//    inLen:入参个数
-//    outLen:出参个数
-func (this *procedure) ParamsLen(inLen, outLen int) *procedure {
-	this.inLen = inLen
-	this.outLen = outLen
+//    funcName：方法名
+//    inLen：入参个数
+//    outLen：出参个数
+func CallProcedure(funcName string, inLen, outLen int) (p *procedure) {
+	p = new(procedure)
+	p.engine = engine
+	p.funcName = funcName
+	p.inLen = inLen
+	p.outLen = outLen
 
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("(")
 	if inLen == 0 {
 		if outLen == 0 {
 			buffer.WriteString(")")
-			this.params = buffer.String()
-			return this
+			p.params = buffer.String()
+			return
 		} else {
 			for j := 0; j < outLen-1; j++ {
 				buffer.WriteString("@out,")
 			}
 
 			buffer.WriteString("@out)")
-			this.params = buffer.String()
-			return this
+			p.params = buffer.String()
+			return
 		}
 	} else {
 		for i := 0; i < inLen-1; i++ {
@@ -58,18 +55,18 @@ func (this *procedure) ParamsLen(inLen, outLen int) *procedure {
 
 		if outLen == 0 {
 			buffer.WriteString("?)")
-			this.params = buffer.String()
-			return this
+			p.params = buffer.String()
+			return
 		} else {
 			buffer.WriteString("?,")
 			for j := 0; j < outLen-1; j++ {
 				buffer.WriteString("@out,")
 			}
 			buffer.WriteString("@out)")
-			this.params = buffer.String()
+			p.params = buffer.String()
 		}
 	}
-	return this
+	return
 }
 
 //查询
