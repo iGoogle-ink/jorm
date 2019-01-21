@@ -24,27 +24,28 @@ create table contact
   home_address    varchar(50) null comment '家庭住址',
   company_address varchar(50) null comment '公司地址'
 );
-
 */
 
 type Contact struct {
-	Name        string `xml:"'name'"`
-	Age         int    `xml:"'age'"`
-	PhoneNumber string `xml:"'phone_number'"`
+	Name        string `xorm:"'name'"`
+	Age         int    `xorm:"'age'"`
+	PhoneNumber string `xorm:"'phone_number'"`
+	HomeAddress string `xorm:"'home_address'"`
 }
 
 func TestCallProcedure(t *testing.T) {
-	err := InitMySQL("root:Ming521.@tcp(jerry.igoogle.ink:3306)/db_test?charset=utf8&parseTime=true&loc=Local")
+	err := InitMySQL("root:password@tcp(jerry.igoogle.ink:3306)/db_test?charset=utf8&parseTime=true&loc=Local")
 	if err != nil {
 		fmt.Println("err:", err)
 	}
 	contact := new(Contact)
-	//columns := []string{"name", "age", "phone_number"}
-	_, err = Xorm().ID(1).Get(contact)
+	columns := []string{"name", "age", "phone_number", "home_address"}
+	_, err = Xorm().Where("id = 1").Cols(columns...).Get(contact)
 	if err != nil {
 		fmt.Println("err:", err)
+	} else {
+		fmt.Println("contact:", contact)
 	}
-	fmt.Println("contact:", contact)
 
 	//result, err := CallProcedure("p_cashier_plateno_query").ParamsLen(3, 0).Query(time.Now(), "rCQRNqop-8klAy", "沪AD1234")
 	//if err != nil {
