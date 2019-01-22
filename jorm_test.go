@@ -8,7 +8,6 @@ package jorm
 import (
 	"fmt"
 	"testing"
-	"time"
 )
 
 /*
@@ -40,19 +39,25 @@ func TestCallProcedure(t *testing.T) {
 		fmt.Println("err:", err)
 	}
 	contact := new(Contact)
-	columns := []string{"name", "age", "phone_number", "home_address"}
-	_, err = Xorm().Where("id = 1").Cols(columns...).Get(contact)
-	if err != nil {
-		fmt.Println("err:", err)
-	} else {
-		fmt.Println("contact:", contact)
-	}
+	//columns := []string{"name", "age", "phone_number", "home_address"}
+	//_, err = Xorm().Where("id = 1").Cols(columns...).Get(contact)
+	//if err != nil {
+	//	fmt.Println("err:", err)
+	//} else {
+	//	fmt.Println("contact:", contact)
+	//}
 
-	result, err := CallProcedure("p_cashier_plateno_query", 3, 0).Query(time.Now(), "rCQRNqop-8klAy", "沪AD1234")
+	//result, err := CallProcedure("p_cashier_plateno_query", 3, 0).Query(time.Now(), "rCQRNqop-8klAy", "沪AD1234")
+	//if err != nil {
+	//	fmt.Println("err:", err)
+	//}
+	//for _, v := range result {
+	//	fmt.Println(v)
+	//}
+
+	result, err := CallProcedure("p_cashier_plateno_query", 3, 0).Get(contact)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
-	for _, v := range result {
-		fmt.Println(v)
-	}
+	fmt.Println(result)
 }

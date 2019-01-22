@@ -94,18 +94,18 @@ func (this *procedure) Query(inParams ...interface{}) (result []map[string]strin
 
 //获取结果到结构体
 func (this *procedure) Get(bean interface{}, inParams ...interface{}) (has bool, err error) {
-	if len(inParams) == 0 {
-		return false, errors.New("参数为空")
-	}
-	if len(inParams) != this.inLen {
-		return false, errors.New("设置参数个数与传参个数不同")
-	}
-	buffer := new(bytes.Buffer)
-	buffer.WriteString("call ")
-	buffer.WriteString(this.funcName)
-	buffer.WriteString(this.params)
-	sqlSlice := []interface{}{buffer.String()}
-	fmt.Println("sql:", sqlSlice)
+	//if len(inParams) == 0 {
+	//	return false, errors.New("参数为空")
+	//}
+	//if len(inParams) != this.inLen {
+	//	return false, errors.New("设置参数个数与传参个数不同")
+	//}
+	//buffer := new(bytes.Buffer)
+	//buffer.WriteString("call ")
+	//buffer.WriteString(this.funcName)
+	//buffer.WriteString(this.params)
+	//sqlSlice := []interface{}{buffer.String()}
+	//fmt.Println("sql:", sqlSlice)
 
 	beanValue := reflect.ValueOf(bean)
 	if beanValue.Kind() != reflect.Ptr {
@@ -113,8 +113,31 @@ func (this *procedure) Get(bean interface{}, inParams ...interface{}) (has bool,
 	} else if beanValue.Elem().Kind() == reflect.Ptr {
 		return false, errors.New("a pointer to a pointer is not allowed")
 	}
+	//indirect := reflect.Indirect(beanValue)
+	numField := beanValue.Elem().NumField()
+	fmt.Println("NumField:", numField)
+	valueType := beanValue.Elem().Type()
+	for i := 0; i < numField; i++ {
+		field := valueType.Field(i)
+		name := field.Name
+		typea := field.Type
+		tag := field.Tag.Get("xorm")
+		fmt.Printf("name:%v,type:%v,tag:%v.\n", name, typea, tag)
+	}
 
-	//log.Println("Kind:", value.Kind())
-	//log.Println("NumField:", value.NumField())
+	sss := "HelloWorld"
+	s := []rune(sss)
+	sLen := len(s)
+	buffer := new(bytes.Buffer)
+	for i := 0; i < sLen; i++ {
+		fmt.Println(s[i])
+		if s[i] >= 65 && s[i] <= 90 {
+			s[i] += 32
+			buffer.WriteString(string(s[i]))
+		} else {
+			buffer.WriteString(string(s[i]))
+		}
+	}
+	fmt.Println("change:", buffer.String())
 	return
 }
