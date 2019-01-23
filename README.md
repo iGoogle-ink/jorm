@@ -16,7 +16,7 @@
 $ go get github.com/iGoogle-ink/jorm
 ```
 
-## 初始化连接MySQL数据库
+## 一、初始化连接MySQL数据库
 > 在项目运行init中初始化
 ```go
 err := jorm.InitMySQL("root:password@tcp(jerry.igoogle.ink:3306)/db_test?charset=utf8&parseTime=true&loc=Local")
@@ -24,7 +24,7 @@ if err != nil {
 	fmt.Println("err:", err)}
 ```
 
-## xorm功能
+## 二、xorm功能
 > xorm原有的功能，都还将保留支持
 ```go
 type Contact struct {
@@ -53,7 +53,7 @@ contact: &{付明明 28 1812341234 上海市杨浦区}
 
 ---
 
-## 调用存储过程返回 []map[string]string 数组
+## 三、调用存储过程返回 []map[string]string 数组
 ```go
 result, err := jorm.CallProcedure("query_student", 1, 9).InParams("付明明").Query()
 if err != nil {
@@ -70,7 +70,7 @@ map[id:1 age:28 phone_number:18012341234 qq_number:85411418 wx_number:ming_85411
 
 ---
 
-## 调用存储过程赋值到结构体
+## 四、调用存储过程赋值到结构体
 > 结构体内字段默认为驼峰命名转小写字母加 _（例：HelloWorld 转换为 hello_world）
 
 > 驼峰命名转换后的字段，要与数据库column字段相同（例：数据库column字段为 phone_number，结构体字段应为 PhoneNumber）
