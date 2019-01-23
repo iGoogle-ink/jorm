@@ -140,11 +140,13 @@ func (this *procedure) Get(beanPtr interface{}) (has bool, err error) {
 		//tag := field.Tag.Get("xorm")
 		key := convertColumn(name)
 
-		value, err := setStructValue(fieldType, result[key])
-		if err != nil {
-			return false, err
+		if result[key] != "" {
+			value, err := setStructValue(fieldType, result[key])
+			if err != nil {
+				return false, err
+			}
+			elem.Field(i).Set(value)
 		}
-		elem.Field(i).Set(value)
 	}
 	return true, nil
 }
