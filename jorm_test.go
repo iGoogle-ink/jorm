@@ -27,37 +27,38 @@ create table contact
 */
 
 type Contact struct {
-	Name        string `xorm:"'name'"`
-	Age         int    `xorm:"'age'"`
-	PhoneNumber string `xorm:"'phone_number'"`
-	HomeAddress string `xorm:"'home_address'"`
+	Name        string `json:"name" jorm:"real_name"`
+	Age         int    `json:"age"`
+	PhoneNumber string `json:"phone_number"`
+	HomeAddress string `json:"home_address"`
 }
 
 func TestCallProcedure(t *testing.T) {
-	err := InitMySQL("root:password@tcp(jerry.igoogle.ink:3306)/db_test?charset=utf8&parseTime=true&loc=Local")
+	err := InitMySQL("root:Ming521.@tcp(jerry.igoogle.ink:3306)/db_test?charset=utf8&parseTime=true&loc=Local")
 	if err != nil {
 		fmt.Println("err:", err)
 	}
 	contact := new(Contact)
-	//columns := []string{"name", "age", "phone_number", "home_address"}
-	//_, err = Xorm().Where("id = 1").Cols(columns...).Get(contact)
-	//if err != nil {
-	//	fmt.Println("err:", err)
-	//} else {
-	//	fmt.Println("contact:", contact)
-	//}
+	columns := []string{"name", "age", "phone_number", "home_address"}
 
-	//result, err := CallProcedure("p_cashier_plateno_query", 3, 0).Query(time.Now(), "rCQRNqop-8klAy", "沪AD1234")
-	//if err != nil {
-	//	fmt.Println("err:", err)
-	//}
-	//for _, v := range result {
-	//	fmt.Println(v)
-	//}
+	_, err = MySQL().Where("name = ?", "付明明").Cols(columns...).Get(contact)
+	if err != nil {
+		fmt.Println("err:", err)
+	} else {
+		fmt.Println("contact:", contact)
+	}
 
-	result, err := CallProcedure("p_cashier_plateno_query", 3, 0).Get(contact)
+	result, err := CallProcedure("query_student", 1, 9).InParams("付明明").Query()
 	if err != nil {
 		fmt.Println("err:", err)
 	}
-	fmt.Println(result)
+	for _, v := range result {
+		fmt.Println(v)
+	}
+
+	_, err = CallProcedure("query_student", 1, 9).InParams("付明明").Get(contact)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	fmt.Println("contact:", contact)
 }

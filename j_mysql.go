@@ -21,6 +21,6 @@ func InitMySQL(dbDsn string) (err error) {
 	return nil
 }
 
-func Xorm() *xorm.Engine {
+func MySQL() *xorm.Engine {
 	return engine
 }
