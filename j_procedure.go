@@ -25,9 +25,9 @@ type procedure struct {
 }
 
 //设置参数
-//    funcName：方法名
-//    inLen：入参个数
-//    outLen：出参个数
+//    funcName：存储过程函数名
+//    inLen：存储过程入参个数
+//    outLen：存储过程出参个数
 func CallProcedure(funcName string, inLen, outLen int) (p *procedure) {
 	p = new(procedure)
 	p.engine = engine
@@ -72,12 +72,14 @@ func CallProcedure(funcName string, inLen, outLen int) (p *procedure) {
 	return
 }
 
+//参数说明
+//    inParams：存储过程入参参数
 func (this *procedure) InParams(inParams ...interface{}) (p *procedure) {
 	this.inParams = inParams
 	return this
 }
 
-//查询
+//查询，返回String类型Map数组
 func (this *procedure) Query() (result []map[string]string, err error) {
 	if len(this.inParams) != this.inLen {
 		return nil, errors.New("设置参数个数与传参个数不同")
@@ -97,7 +99,7 @@ func (this *procedure) Query() (result []map[string]string, err error) {
 	return strings, nil
 }
 
-//获取结果到结构体
+//获取结果赋值到结构体
 func (this *procedure) Get(beanPtr interface{}) (has bool, err error) {
 	//验证参数
 	if len(this.inParams) != this.inLen {
