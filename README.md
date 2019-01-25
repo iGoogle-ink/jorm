@@ -28,7 +28,7 @@ if err != nil {
 > xorm原有的功能，都还将保留支持
 ```go
 type Contact struct {
-	Name        string `json:"name" jorm:"real_name"`
+	RealName    string `json:"real_name" jorm:"name"`
 	Age         int    `json:"age"`
 	PhoneNumber string `json:"phone_number"`
 	HomeAddress string `json:"home_address"`
@@ -75,10 +75,10 @@ map[id:1 age:28 phone_number:18012341234 qq_number:85411418 wx_number:ming_85411
 
 > 驼峰命名转换后的字段，要与数据库column字段相同（例：数据库column字段为 phone_number，结构体字段应为 PhoneNumber）
 
-> 字段后加标记，为数据库column字段（例：如下Contact结构体Name字段，加标记后则默认数据库column字段为标记中的字段 real_name）（暂时未完成）
+> 字段后加标记，为数据库column字段（例：如下Contact结构体RealName字段，加标记后则默认数据库column字段为标记中的字段 name）
 ```go
 type Contact struct {
-	Name        string `json:"name" jorm:"real_name"`
+	RealName    string `json:"real_name" jorm:"name"`
 	Age         int    `json:"age"`
 	PhoneNumber string `json:"phone_number"`
 	HomeAddress string `json:"home_address"`

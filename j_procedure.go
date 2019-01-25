@@ -139,11 +139,19 @@ func (this *procedure) Get(beanPtr interface{}) (has bool, err error) {
 		field := elemType.Field(i)
 		name := field.Name
 		fieldType := field.Type
-		//tag := field.Tag.Get("xorm")
-		key := convertColumn(name)
+		//tags := field.Tag
+		//fmt.Println("tags:", tags)
+		tag := field.Tag.Get("jorm")
+		//fmt.Println("tag:", tag)
+		var column string
+		if tag != null {
+			column = tag
+		} else {
+			column = convertColumn(name)
+		}
 
-		if result[key] != "" {
-			value, err := setStructValue(fieldType, result[key])
+		if result[column] != "" {
+			value, err := setStructValue(fieldType, result[column])
 			if err != nil {
 				return false, err
 			}

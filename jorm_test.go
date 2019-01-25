@@ -27,7 +27,7 @@ create table contact
 */
 
 type Contact struct {
-	Name        string `json:"name" jorm:"real_name"`
+	RealName    string `json:"real_name" jorm:"name"`
 	Age         int    `json:"age"`
 	PhoneNumber string `json:"phone_number"`
 	HomeAddress string `json:"home_address"`
@@ -55,13 +55,13 @@ func TestCallProcedure(t *testing.T) {
 	//}
 	//fmt.Println("contact:", contact)
 
-	result, err := CallProcedure("query_student", 1, 9).InParams("付明明").Query()
-	if err != nil {
-		fmt.Println("err:", err)
-	}
-	for _, v := range result {
-		fmt.Println(v)
-	}
+	//result, err := CallProcedure("query_student", 1, 9).InParams("付明明").Query()
+	//if err != nil {
+	//	fmt.Println("err:", err)
+	//}
+	//for _, v := range result {
+	//	fmt.Println(v)
+	//}
 
 	_, err = CallProcedure("query_student", 1, 9).InParams("付明明").Get(contact)
 	if err != nil {

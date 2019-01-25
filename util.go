@@ -7,6 +7,10 @@ package jorm
 
 import "strconv"
 
+const (
+	null string = ""
+)
+
 //字符串转Float
 func String2Float(floatStr string) (floatNum float64) {
 	floatNum, _ = strconv.ParseFloat(floatStr, 64)
