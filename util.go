@@ -52,15 +52,27 @@ func String2Float(floatStr string) (floatNum float64) {
 	return
 }
 
-//Float转字符串
-//    floatNum：float数字
+//Float64转字符串
+//    floatNum：float64数字
 //    prec：精度位数（不传则默认float数字精度）
-func Float2String(floatNum float64, prec ...int) (floatStr string) {
+func Float64ToString(floatNum float64, prec ...int) (floatStr string) {
 	if len(prec) > 0 {
 		floatStr = strconv.FormatFloat(floatNum, 'f', prec[0], 64)
 		return
 	}
 	floatStr = strconv.FormatFloat(floatNum, 'f', -1, 64)
+	return
+}
+
+//Float32转字符串
+//    floatNum：float32数字
+//    prec：精度位数（不传则默认float数字精度）
+func Float32ToString(floatNum float32, prec ...int) (floatStr string) {
+	if len(prec) > 0 {
+		floatStr = strconv.FormatFloat(float64(floatNum), 'f', prec[0], 32)
+		return
+	}
+	floatStr = strconv.FormatFloat(float64(floatNum), 'f', -1, 32)
 	return
 }
 
