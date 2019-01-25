@@ -24,3 +24,11 @@ func InitMySQL(dbDsn string) (err error) {
 func MySQL() *xorm.Engine {
 	return engine
 }
+
+func doQuery(sqlSlice []interface{}) (results []map[string]string, err error) {
+	results, err = engine.QueryString(sqlSlice...)
+	if err != nil {
+		return nil, err
+	}
+	return
+}

@@ -8,15 +8,11 @@ package jorm
 import (
 	"bytes"
 	"errors"
-	"fmt"
-	"github.com/go-xorm/xorm"
+	"log"
 	"reflect"
-	"strconv"
-	"unicode"
 )
 
 type procedure struct {
-	engine   *xorm.Engine
 	funcName string
 	inLen    int
 	outLen   int
@@ -30,7 +26,6 @@ type procedure struct {
 //    outLen：存储过程出参个数
 func CallProcedure(funcName string, inLen, outLen int) (p *procedure) {
 	p = new(procedure)
-	p.engine = engine
 	p.funcName = funcName
 	p.inLen = inLen
 	p.outLen = outLen
@@ -80,155 +75,80 @@ func (this *procedure) InParams(inParams ...interface{}) (p *procedure) {
 }
 
 //查询，返回String类型Map数组
-func (this *procedure) Query() (result []map[string]string, err error) {
+func (this *procedure) Query() (results []map[string]string, err error) {
 	if len(this.inParams) != this.inLen {
 		return nil, errors.New("设置参数个数与传参个数不同")
 	}
+	//拼接sql语句
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("call ")
 	buffer.WriteString(this.funcName)
 	buffer.WriteString(this.sql)
-
 	sqlSlice := []interface{}{buffer.String()}
 	sqlSlice = append(sqlSlice, this.inParams...)
 
-	strings, err := this.engine.QueryString(sqlSlice...)
+	results, err = doQuery(sqlSlice)
 	if err != nil {
 		return nil, err
 	}
-	return strings, nil
+	if len(results) <= 0 {
+		return nil, errors.New("没有查到数据")
+	}
+
+	return results, nil
 }
 
 //获取结果赋值到结构体
-func (this *procedure) Get(beanPtr interface{}) (has bool, err error) {
+func (this *procedure) Get(beanPtr interface{}) (err error) {
 	//验证参数
 	if len(this.inParams) != this.inLen {
-		return false, errors.New("设置参数个数与传参个数不同")
+		return errors.New("设置参数个数与传参个数不同")
 	}
-	//验证结构体类型
+	//验证参数类型
 	beanValue := reflect.ValueOf(beanPtr)
 	if beanValue.Kind() != reflect.Ptr {
-		return false, errors.New("传入结构体必须是以指针形式")
-	} else if beanValue.Elem().Kind() != reflect.Struct {
-		return false, errors.New("传入类型必须是结构体")
+		return errors.New("传入参数类型必须是以指针形式")
 	}
-
-	//拼接SQL语句
-	buffer := new(bytes.Buffer)
-	buffer.WriteString("call ")
-	buffer.WriteString(this.funcName)
-	buffer.WriteString(this.sql)
-	sqlSlice := []interface{}{buffer.String()}
-	sqlSlice = append(sqlSlice, this.inParams...)
-	//fmt.Println("sql:", sqlSlice)
-	//执行SQL请求
-	strings, err := this.engine.QueryString(sqlSlice...)
-	if err != nil {
-		return false, err
+	//验证interface{}类型
+	if beanValue.Elem().Kind() != reflect.Struct {
+		return errors.New("传入interface{}必须是结构体")
 	}
-	if len(strings) <= 0 {
-		return false, errors.New("没有查到数据")
-	}
-	result := strings[0]
-	//fmt.Println("result:", result)
-	elem := beanValue.Elem()
-	numField := elem.NumField()
-	//fmt.Println("NumField:", numField)
-	elemType := elem.Type()
-	for i := 0; i < numField; i++ {
-		field := elemType.Field(i)
-		name := field.Name
-		fieldType := field.Type
-		//tags := field.Tag
-		//fmt.Println("tags:", tags)
-		tag := field.Tag.Get("jorm")
-		//fmt.Println("tag:", tag)
-		var column string
-		if tag != null {
-			column = tag
-		} else {
-			column = convertColumn(name)
-		}
-
-		if result[column] != "" {
-			value, err := setStructValue(fieldType, result[column])
-			if err != nil {
-				return false, err
-			}
-			elem.Field(i).Set(value)
-		}
-	}
-	return true, nil
+	return get(this, beanValue)
 }
 
 //获取结果结构体列表
-func (this *procedure) Find(beanListPtr interface{}) (err error) {
+func (this *procedure) Find(beanSlicePtr interface{}) (err error) {
+	//验证参数
+	if len(this.inParams) != this.inLen {
+		return errors.New("设置参数个数与传参个数不同")
+	}
+	//验证参数类型
+	beanValue := reflect.ValueOf(beanSlicePtr)
+	paramType := beanValue.Kind()
+	if paramType != reflect.Ptr {
+		return errors.New("传入参数必须是以指针形式")
+	}
+	//验证interface{}类型
+	sliceValue := reflect.Indirect(reflect.ValueOf(beanSlicePtr))
+
+	kind := sliceValue.Kind() //传入参数种类
+	//fmt.Println("kind:", kind)
+	if kind != reflect.Slice {
+		return errors.New("传入interface{}必须是切片")
+	}
+	//验证切片类型
+	elemKind := sliceValue.Type().Elem().Kind() //切片的类型
+	//fmt.Println("elemKind:", elemKind)
+	if elemKind != reflect.Struct && elemKind != reflect.Ptr {
+		return errors.New("切片类型必须是结构体类型或者是结构体指针类型")
+	}
+
+	sliceElemType := sliceValue.Type().Elem()
+	log.Println("sliceElemType:", sliceElemType)
+	log.Println("sliceElemType.Kind():", sliceElemType.Kind())
+	elem2 := sliceElemType.Elem()
+	log.Println("elem2:", elem2)
+
 	return nil
-}
-
-func convertColumn(name string) (key string) {
-	s := []rune(name)
-	sLen := len(s)
-	buffer := new(bytes.Buffer)
-	var isFirst = true
-	//驼峰命名转换
-	for i := 0; i < sLen; i++ {
-		if unicode.IsUpper(s[i]) {
-			if isFirst {
-				lower := unicode.ToLower(s[i])
-				buffer.WriteString(string(lower))
-				isFirst = false
-			} else {
-				buffer.WriteString("_")
-				lower := unicode.ToLower(s[i])
-				buffer.WriteString(string(lower))
-			}
-		} else {
-			buffer.WriteString(string(s[i]))
-		}
-	}
-	key = buffer.String()
-	return
-}
-
-func setStructValue(fieldType reflect.Type, strValue string) (value reflect.Value, err error) {
-	var result interface{}
-	var defReturn = reflect.Zero(fieldType)
-	switch fieldType.Kind() {
-	case reflect.Int:
-		result, err = strconv.Atoi(strValue)
-		if err != nil {
-			return defReturn, fmt.Errorf("转换 %s 为 int 类型出错: %s", strValue, err.Error())
-		}
-	case reflect.Int64:
-		i, err := strconv.Atoi(strValue)
-		if err != nil {
-			return defReturn, fmt.Errorf("转换 %s 为 int64 类型出错: %s", strValue, err.Error())
-		}
-		result = int64(i)
-	case reflect.Float32:
-		f, err := strconv.ParseFloat(strValue, 32)
-		if err != nil {
-			return defReturn, fmt.Errorf("转换 %s 为 float32 类型出错: %s", strValue, err.Error())
-		}
-		result = float32(f)
-	case reflect.Float64:
-		f, err := strconv.ParseFloat(strValue, 64)
-		if err != nil {
-			return defReturn, fmt.Errorf("转换 %s 为 float64 类型出错: %s", strValue, err.Error())
-		}
-		result = float64(f)
-	case reflect.String:
-		result = strValue
-	default:
-		return defReturn, errors.New("参数中含有无法转换的类型")
-	}
-	//if fieldType == reflect.String {
-	//	elem.Field(i).SetString(result[key])
-	//} else if fieldType == reflect.Int {
-	//	elem.Field(i).SetInt(String2Int64(result[key]))
-	//} else if fieldType == reflect.Float64 {
-	//	elem.Field(i).SetFloat(String2Float(result[key]))
-	//}
-	return reflect.ValueOf(result).Convert(fieldType), nil
+	//return find(this, sliceValue)
 }

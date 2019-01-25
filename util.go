@@ -5,11 +5,46 @@
 //==================================
 package jorm
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+	"time"
+)
 
 const (
-	null string = ""
+	null       string = ""
+	TimeLayout string = "2006-01-02 15:04:05"
+	DateLayout string = "2006-01-02"
 )
+
+//解析时间
+func ParseDateTime(timeStr string) (datetime time.Time) {
+	datetime, _ = time.ParseInLocation(TimeLayout, timeStr, time.Local)
+	return
+}
+
+//格式化Datetime
+func FormatDateTime(timeStr string) (formatTime string) {
+	//2019-01-04T15:40:00Z
+	//2019-01-18 20:51:30+08:00
+	if timeStr == "" {
+		return ""
+	}
+	replace := strings.Replace(timeStr, "T", " ", 1)
+	formatTime = replace[:19]
+	return
+}
+
+//格式化
+func FormatDate(dateStr string) (formatDate string) {
+	//2020-12-30T00:00:00+08:00
+	if dateStr == "" {
+		return ""
+	}
+	split := strings.Split(dateStr, "T")
+	formatDate = split[0]
+	return
+}
 
 //字符串转Float
 func String2Float(floatStr string) (floatNum float64) {

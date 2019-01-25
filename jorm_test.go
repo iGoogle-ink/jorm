@@ -34,26 +34,21 @@ type Contact struct {
 }
 
 func TestCallProcedure(t *testing.T) {
-	err := InitMySQL("root:password.@tcp(jerry.igoogle.ink:3306)/db_test?charset=utf8&parseTime=true&loc=Local")
+	err := InitMySQL("root:Ming521.@tcp(jerry.igoogle.ink:3306)/db_test?charset=utf8")
 
 	if err != nil {
 		fmt.Println("err:", err)
 	}
-	contact := new(Contact)
+
+	//contact := new(Contact)
 	//columns := []string{"name", "age", "phone_number", "home_address"}
 	//
-	//_, err = MySQL().Where("name = ?", "付明明").Cols(columns...).Get(contact)
+	//err = MySQL().Where("name = ?", "付明明").Cols(columns...).Find(contact)
 	//if err != nil {
 	//	fmt.Println("err:", err)
 	//} else {
 	//	fmt.Println("contact:", contact)
 	//}
-
-	//_, err = MySQL().CallProcedure("query_student", 1, 9).InParams("付明明").Get(contact)
-	//if err != nil {
-	//	fmt.Println("err:", err)
-	//}
-	//fmt.Println("contact:", contact)
 
 	//result, err := CallProcedure("query_student", 1, 9).InParams("付明明").Query()
 	//if err != nil {
@@ -63,9 +58,18 @@ func TestCallProcedure(t *testing.T) {
 	//	fmt.Println(v)
 	//}
 
-	_, err = CallProcedure("query_student", 1, 9).InParams("付明明").Get(contact)
+	//contact := new(Contact)
+	//err = CallProcedure("query_student", 1, 9).InParams("付明明").Get(contact)
+	//if err != nil {
+	//	fmt.Println("err:", err)
+	//}
+	//fmt.Println("contact:", contact)
+
+	contactList := make([]*Contact, 0)
+	err = CallProcedure("query_student", 1, 9).InParams("付明明").Find(&contactList)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
-	fmt.Println("contact:", contact)
+	fmt.Println("contactList:", contactList)
+
 }
