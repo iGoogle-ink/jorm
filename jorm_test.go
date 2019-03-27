@@ -10,7 +10,6 @@ import (
 	"gitlab.iguiyu.com/park/struct/model"
 	"log"
 	"testing"
-	"time"
 )
 
 /*
@@ -37,12 +36,12 @@ type Contact struct {
 }
 
 func TestCallProcedure(t *testing.T) {
-	//err := InitMySQL("root:Ming521.@tcp(jerry.igoogle.ink:3306)/db_test?charset=utf8")
-	err := InitMySQL("developer:Iloveguiyu2018!@tcp(rm-uf6sl3y5zl5mku48jho.mysql.rds.aliyuncs.com:3306)/lock_test?charset=utf8")
+	err := InitMySQL("root:Ming521.@tcp(jerry.igoogle.ink:3306)/db_test?charset=utf8")
+	//err := InitMySQL("developer:Iloveguiyu2018!@tcp(rm-uf6sl3y5zl5mku48jho.mysql.rds.aliyuncs.com:3306)/lock_test?charset=utf8")
 	if err != nil {
 		fmt.Println("err:", err)
 	}
-	session := MySQL().NewSession()
+	//session := MySQL().NewSession()
 
 	//contact := new(Contact)
 	//columns := []string{"name", "age", "phone_number", "home_address"}
@@ -57,15 +56,6 @@ func TestCallProcedure(t *testing.T) {
 	//sql, i := session.LastSQL()
 	//log.Println("sql:", sql)
 	//log.Println("i:", i)
-
-	vip := new(model.SiteVip)
-	has, err := session.Table("site_vip").Where("plate_number = ?", "沪HZ5690").
-		And("start_time <= ?", time.Now().Format("2006-01-02 15:04:05")).Get(vip)
-	if err != nil {
-		log.Println("err:", err)
-	}
-	log.Println("has:", has)
-	log.Println(vip)
 
 	//poleLog := new(model.PoleLog)
 	//_, err = session.Table("pole_log").Where("plate_number = ?", "沪HZ5690").Desc("id").Get(poleLog)
@@ -109,14 +99,14 @@ func TestCallProcedure(t *testing.T) {
 	//if err != nil {
 	//	fmt.Println("err:", err)
 	//}
-	//fmt.Println("contact:", contact)
-	//
-	//contactList := make([]*Contact, 0)
-	//err = CallProcedure("query_student", 1, 9).InParams("付明明").Find(&contactList)
-	//if err != nil {
-	//	fmt.Println("err:", err)
-	//}
-	//fmt.Println("contactList:", contactList)
+	//fmt.Println("contact:", *contact)
+
+	contactList := make([]Contact, 0)
+	err = CallProcedure("query_student", 1, 9).InParams("付明明").Find(&contactList)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	fmt.Println("contactList:", contactList)
 
 }
 
