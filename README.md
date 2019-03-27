@@ -13,7 +13,7 @@
 
 ## 安装
 ```bash
-$ go get github.com/iGoogle-ink/jorm
+$ go get -u github.com/iGoogle-ink/jorm
 ```
 
 ## 一、初始化连接MySQL数据库
