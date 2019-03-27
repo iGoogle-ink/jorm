@@ -73,13 +73,7 @@ func setStructValuePtr(fieldType reflect.Type, strValue string) (value reflect.V
 	default:
 		return defReturn, errors.New("参数中含有无法转换的类型")
 	}
-	//if fieldType == reflect.String {
-	//	elem.Field(i).SetString(result[key])
-	//} else if fieldType == reflect.Int {
-	//	elem.Field(i).SetInt(String2Int64(result[key]))
-	//} else if fieldType == reflect.Float64 {
-	//	elem.Field(i).SetFloat(String2Float(result[key]))
-	//}
+
 	return reflect.ValueOf(result).Convert(fieldType), nil
 }
 
