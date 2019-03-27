@@ -90,11 +90,39 @@ _, err = CallProcedure("query_student", 1, 9).InParams("付明明").Get(contact)
 if err != nil {
 	fmt.Println("err:", err)
 }
-fmt.Println("contact:", contact)
+fmt.Println("contact:", *contact)
 ```
 输出结果为：
 ```bash
-contact: &{付明明 28 1812341234 上海市杨浦区}
+contact: {付明明 28 1812341234 上海市杨浦区}
+```
+
+## 五、调用存储过程赋值到切片
+> 结构体内字段默认为驼峰命名转小写字母加 _（例：HelloWorld 转换为 hello_world）
+
+> 驼峰命名转换后的字段，要与数据库column字段相同（例：数据库column字段为 phone_number，结构体字段应为 PhoneNumber）
+
+> 字段后加标记，为数据库column字段（例：如下Contact结构体RealName字段，加标记后则默认数据库column字段为标记中的字段 name）
+```go
+type Contact struct {
+	RealName    string `json:"real_name" jorm:"name"`
+	Age         int    `json:"age"`
+	PhoneNumber string `json:"phone_number"`
+	HomeAddress string `json:"home_address"`
+}
+
+contactList := make([]Contact, 0)
+
+err = CallProcedure("query_student", 1, 9).InParams("付明明").Find(&contactList)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	fmt.Println("contactList:", contactList)
+
+```
+输出结果为：
+```bash
+contactList: [{付明明 28 18017448610 上海市杨浦区顺平路59弄4号603} {付明明 29 18017448610 上海市杨浦区顺平路59弄4号603} {付明明 30 18017448610 上海市杨浦区顺平路59弄4号603}]
 ```
 
 ## License
