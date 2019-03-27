@@ -8,7 +8,6 @@ package jorm
 import (
 	"bytes"
 	"errors"
-	"log"
 	"reflect"
 )
 
@@ -118,18 +117,18 @@ func (this *procedure) Get(beanPtr interface{}) (err error) {
 
 //获取结果结构体列表
 func (this *procedure) Find(beanSlicePtr interface{}) (err error) {
-	//验证参数
+	//验证参数个数
 	if len(this.inParams) != this.inLen {
 		return errors.New("设置参数个数与传参个数不同")
 	}
-	//验证参数类型
-	beanValue := reflect.ValueOf(beanSlicePtr)
-	paramType := beanValue.Kind()
+	//验证参数类型必须是指针
+	beanSliceValue := reflect.ValueOf(beanSlicePtr)
+	paramType := beanSliceValue.Kind()
 	if paramType != reflect.Ptr {
 		return errors.New("传入参数必须是以指针形式")
 	}
 	//验证interface{}类型
-	sliceValue := reflect.Indirect(reflect.ValueOf(beanSlicePtr))
+	sliceValue := beanSliceValue.Elem()
 
 	kind := sliceValue.Kind() //传入参数种类
 	//fmt.Println("kind:", kind)
@@ -143,12 +142,5 @@ func (this *procedure) Find(beanSlicePtr interface{}) (err error) {
 		return errors.New("切片类型必须是结构体类型或者是结构体指针类型")
 	}
 
-	sliceElemType := sliceValue.Type().Elem()
-	log.Println("sliceElemType:", sliceElemType)
-	log.Println("sliceElemType.Kind():", sliceElemType.Kind())
-	elem2 := sliceElemType.Elem()
-	log.Println("elem2:", elem2)
-
-	return nil
-	//return find(this, sliceValue)
+	return find(this, sliceValue)
 }
