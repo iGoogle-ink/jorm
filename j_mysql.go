@@ -18,6 +18,7 @@ func InitMySQL(dbDsn string) (err error) {
 		return err
 	}
 	engine.ShowSQL(true)
+	//engine.SetLogLevel(core.LOG_WARNING)
 	return nil
 }
 
