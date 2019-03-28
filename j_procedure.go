@@ -112,7 +112,7 @@ func (this *procedure) Get(beanPtr interface{}) (err error) {
 	if beanValue.Elem().Kind() != reflect.Struct {
 		return errors.New("传入interface{}必须是结构体")
 	}
-	return get(this, beanValue)
+	return get(this, beanValue.Elem())
 }
 
 //获取结果结构体列表
@@ -121,23 +121,18 @@ func (this *procedure) Find(beanSlicePtr interface{}) (err error) {
 	if len(this.inParams) != this.inLen {
 		return errors.New("设置参数个数与传参个数不同")
 	}
-	//验证参数类型必须是指针
 	beanSliceValue := reflect.ValueOf(beanSlicePtr)
-	paramType := beanSliceValue.Kind()
-	if paramType != reflect.Ptr {
+	//验证参数类型必须是指针
+	if beanSliceValue.Kind() != reflect.Ptr {
 		return errors.New("传入参数必须是以指针形式")
 	}
-	//验证interface{}类型
 	sliceValue := beanSliceValue.Elem()
-
-	kind := sliceValue.Kind() //传入参数种类
-	//fmt.Println("kind:", kind)
-	if kind != reflect.Slice {
+	//验证interface{}类型
+	if sliceValue.Kind() != reflect.Slice {
 		return errors.New("传入interface{}必须是切片")
 	}
-	//验证切片类型
 	elemKind := sliceValue.Type().Elem().Kind() //切片的类型
-	//fmt.Println("elemKind:", elemKind)
+	//验证切片类型
 	if elemKind != reflect.Struct && elemKind != reflect.Ptr {
 		return errors.New("切片类型必须是结构体类型或者是结构体指针类型")
 	}

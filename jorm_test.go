@@ -94,15 +94,15 @@ func TestCallProcedure(t *testing.T) {
 	//	fmt.Println(v)
 	//}
 
-	//contact := new(Contact)
-	//err = CallProcedure("query_student", 1, 9).InParams("付明明").Get(contact)
-	//if err != nil {
-	//	fmt.Println("err:", err)
-	//}
-	//fmt.Println("contact:", *contact)
+	contact := new(Contact)
+	err = CallProcedure("query_student", 1, 9).InParams("付明明").Get(contact)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	fmt.Println("contact:", *contact)
 
 	contactList := make([]Contact, 0)
-	err = CallProcedure("query_student", 1, 9).InParams("付明明").Find(&contactList)
+	err = CallProcedure("query_student", 1, 9).InParams("付明明1").Find(&contactList)
 	if err != nil {
 		fmt.Println("err:", err)
 	}

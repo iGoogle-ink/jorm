@@ -29,13 +29,15 @@ func find(this *procedure, sliceValue reflect.Value) (err error) {
 	}
 	lens := len(results)
 	if lens <= 0 {
-		return errors.New("没有查到数据")
+		sliceValue.Set(reflect.Zero(sliceValue.Type()))
+		//return errors.New("没有查到数据")
+		return nil
 	}
-	elem := sliceValue.Type().Elem()
+
+	elem := sliceValue.Type().Elem() //切片中结构体
 	//fmt.Println("elem:", elem)
 	numField := elem.NumField() //结构体中字段个数
 	//fmt.Println("numField:", numField)
-
 	elemKind := elem.Kind() //切片的类型
 	switch elemKind {
 	case reflect.Struct:
@@ -48,7 +50,7 @@ func find(this *procedure, sliceValue reflect.Value) (err error) {
 		for i := 0; i < lens; i++ {
 			sqlMap = results[i]
 
-			elemStruct = reflect.New(elem) //new一个elem类型的结构体
+			elemStruct = reflect.New(elem).Elem() //new一个elem类型的结构体
 
 			//将每一个查询到的条目，赋值到结构体
 			for i := 0; i < numField; i++ {
@@ -70,12 +72,12 @@ func find(this *procedure, sliceValue reflect.Value) (err error) {
 						fmt.Println("err:", err)
 					}
 					//fmt.Println("value:", value)
-					elemStruct.Elem().Field(i).Set(value) //给elem类型结构体的每一个属性阻断赋值
+					elemStruct.Field(i).Set(value) //给elem类型结构体的每一个属性阻断赋值
 				}
 			}
 
 			//fmt.Println("elemStruct:", elemStruct.Elem())
-			values = append(values, elemStruct.Elem()) //将每一个elem类型的结构体的值，添加到 reflect.Value 的切片
+			values = append(values, elemStruct) //将每一个elem类型的结构体的值，添加到 reflect.Value 的切片
 		}
 
 		reflectValues := reflect.Append(sliceValue, values...) //将 reflect.Value 的切片 添加到sliceValue,得到一个reflectValue

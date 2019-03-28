@@ -7,14 +7,11 @@ package jorm
 
 import (
 	"bytes"
-	"errors"
-	"fmt"
 	"reflect"
 )
 
 //获取结果赋值到结构体
-func get(this *procedure, beanValue reflect.Value) (err error) {
-
+func get(this *procedure, beanElem reflect.Value) (err error) {
 	//拼接SQL语句
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("call ")
@@ -29,14 +26,16 @@ func get(this *procedure, beanValue reflect.Value) (err error) {
 		return err
 	}
 	if len(results) <= 0 {
-		return errors.New("没有查到数据")
+		beanElem.Set(reflect.Zero(beanElem.Type()))
+		return nil
+		//return errors.New("没有查到数据")
 	}
 	result := results[0]
 
-	elem := beanValue.Elem() //结构体
-	fmt.Println("elem:", elem)
-	numField := elem.NumField() //结构体中字段个数
-	elemType := elem.Type()     //结构体类型
+	elemStruct := reflect.New(beanElem.Type()).Elem()
+
+	numField := beanElem.NumField() //结构体中字段个数
+	elemType := beanElem.Type()     //结构体类型
 	var column string
 	for i := 0; i < numField; i++ {
 		field := elemType.Field(i) //遍历每一个字段
@@ -53,8 +52,10 @@ func get(this *procedure, beanValue reflect.Value) (err error) {
 			if err != nil {
 				return err
 			}
-			elem.Field(i).Set(value)
+			elemStruct.Field(i).Set(value)
 		}
 	}
+
+	beanElem.Set(elemStruct)
 	return nil
 }
