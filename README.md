@@ -85,12 +85,15 @@ type Contact struct {
 }
 
 contact := new(Contact)
-    
-_, err = CallProcedure("query_student", 1, 9).InParams("付明明").Get(contact)
+has, err := CallProcedure("query_student", 1, 9).InParams("付明明").Get(contact)
 if err != nil {
 	fmt.Println("err:", err)
 }
-fmt.Println("contact:", *contact)
+if has {
+	fmt.Println("contact:", *contact)
+} else {
+	fmt.Println("没有查到需要的数据")
+}
 ```
 输出结果为：
 ```bash
@@ -114,12 +117,12 @@ type Contact struct {
 contactList := make([]Contact, 0)
 
 err = CallProcedure("query_student", 1, 9).InParams("付明明").Find(&contactList)
-	if err != nil {
-		fmt.Println("err:", err)
-	}
-	fmt.Println("contactList:", contactList)
-
+if err != nil {
+	fmt.Println("err:", err)
+}
+fmt.Println("contactList:", contactList)
 ```
+
 输出结果为：
 ```bash
 contactList: [{付明明 28 18017448610 上海市杨浦区顺平路59弄4号603} {付明明 29 18017448610 上海市杨浦区顺平路59弄4号603} {付明明 30 18017448610 上海市杨浦区顺平路59弄4号603}]
