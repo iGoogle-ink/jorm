@@ -65,7 +65,7 @@ func find(this *procedure, sliceValue reflect.Value) (err error) {
 				}
 
 				if sqlMap[column] != "" {
-					value, err := setStructValue(fieldType, sqlMap[column]) //搜索出来的值转换成 reflect.Value 值
+					value, err := convertValue(fieldType, sqlMap[column]) //搜索出来的值转换成 reflect.Value 值
 					if err != nil {
 						fmt.Println("err:", err)
 					}

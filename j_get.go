@@ -49,7 +49,7 @@ func get(this *procedure, beanValue reflect.Value) (err error) {
 			column = convertColumn(fieldName)
 		}
 		if result[column] != "" {
-			value, err := setStructValuePtr(fieldType, result[column])
+			value, err := convertValue(fieldType, result[column])
 			if err != nil {
 				return err
 			}

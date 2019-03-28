@@ -40,45 +40,8 @@ func convertColumn(name string) (key string) {
 	return
 }
 
-//指针类型结构体 Set值
-func setStructValuePtr(fieldType reflect.Type, strValue string) (value reflect.Value, err error) {
-	var result interface{}
-	var defReturn = reflect.Zero(fieldType)
-	switch fieldType.Kind() {
-	case reflect.Int:
-		result, err = strconv.Atoi(strValue)
-		if err != nil {
-			return defReturn, fmt.Errorf("转换 %s 为 int 类型出错: %s", strValue, err.Error())
-		}
-	case reflect.Int64:
-		i, err := strconv.Atoi(strValue)
-		if err != nil {
-			return defReturn, fmt.Errorf("转换 %s 为 int64 类型出错: %s", strValue, err.Error())
-		}
-		result = int64(i)
-	case reflect.Float32:
-		f, err := strconv.ParseFloat(strValue, 32)
-		if err != nil {
-			return defReturn, fmt.Errorf("转换 %s 为 float32 类型出错: %s", strValue, err.Error())
-		}
-		result = float32(f)
-	case reflect.Float64:
-		f, err := strconv.ParseFloat(strValue, 64)
-		if err != nil {
-			return defReturn, fmt.Errorf("转换 %s 为 float64 类型出错: %s", strValue, err.Error())
-		}
-		result = float64(f)
-	case reflect.String:
-		result = strValue
-	default:
-		return defReturn, errors.New("参数中含有无法转换的类型")
-	}
-
-	return reflect.ValueOf(result).Convert(fieldType), nil
-}
-
-//非指针类型结构体 Set值
-func setStructValue(fieldType reflect.Type, strValue string) (value reflect.Value, err error) {
+//string值转换reflect.Value
+func convertValue(fieldType reflect.Type, strValue string) (value reflect.Value, err error) {
 	var result interface{}
 	var defReturn = reflect.Zero(fieldType)
 	switch fieldType.Kind() {
