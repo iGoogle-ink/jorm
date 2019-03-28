@@ -11,7 +11,7 @@ import (
 )
 
 //获取结果赋值到结构体
-func get(this *procedure, beanElem reflect.Value) (err error) {
+func get(this *procedure, beanElem reflect.Value) (has bool, err error) {
 	//拼接SQL语句
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("call ")
@@ -23,12 +23,11 @@ func get(this *procedure, beanElem reflect.Value) (err error) {
 	//执行SQL请求
 	results, err := doQuery(sqlSlice)
 	if err != nil {
-		return err
+		return false, err
 	}
 	if len(results) <= 0 {
 		beanElem.Set(reflect.Zero(beanElem.Type()))
-		return nil
-		//return errors.New("没有查到数据")
+		return false, nil
 	}
 	result := results[0]
 
@@ -50,12 +49,12 @@ func get(this *procedure, beanElem reflect.Value) (err error) {
 		if result[column] != "" {
 			value, err := convertValue(fieldType, result[column])
 			if err != nil {
-				return err
+				return false, err
 			}
 			elemStruct.Field(i).Set(value)
 		}
 	}
 
 	beanElem.Set(elemStruct)
-	return nil
+	return true, nil
 }
