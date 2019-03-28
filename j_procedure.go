@@ -98,19 +98,19 @@ func (this *procedure) Query() (results []map[string]string, err error) {
 }
 
 //获取结果赋值到结构体
-func (this *procedure) Get(beanPtr interface{}) (err error) {
+func (this *procedure) Get(beanPtr interface{}) (has bool, err error) {
 	//验证参数
 	if len(this.inParams) != this.inLen {
-		return errors.New("设置参数个数与传参个数不同")
+		return false, errors.New("设置参数个数与传参个数不同")
 	}
 	//验证参数类型
 	beanValue := reflect.ValueOf(beanPtr)
 	if beanValue.Kind() != reflect.Ptr {
-		return errors.New("传入参数类型必须是以指针形式")
+		return false, errors.New("传入参数类型必须是以指针形式")
 	}
 	//验证interface{}类型
 	if beanValue.Elem().Kind() != reflect.Struct {
-		return errors.New("传入interface{}必须是结构体")
+		return false, errors.New("传入interface{}必须是结构体")
 	}
 	return get(this, beanValue.Elem())
 }
