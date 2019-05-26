@@ -115,7 +115,7 @@ func TestCallProcedure(t *testing.T) {
 }
 
 func TestDbSearch(t *testing.T) {
-	err := InitMySQL("developer:Iloveguiyu2018!@tcp(rm-uf6sl3y5zl5mku48jho.mysql.rds.aliyuncs.com:3306)/lock_test?charset=utf8")
+	err := InitMySQL("root:password@tcp(rm-uf6sl3y5zl5mku48jho.mysql.rds.aliyuncs.com:3306)/lock_test?charset=utf8")
 	if err != nil {
 		fmt.Println("err:", err)
 	}
