@@ -28,7 +28,7 @@ create table contact
 
 type Contact struct {
 	UserId      int    `json:"user_id"`
-	Name        string `json:"name" jorm:"real_name"`
+	Name        string `json:"name" jorm:"real_name" xorm:"real_name"`
 	Age         int    `json:"age"`
 	PhoneNumber string `json:"phone_number"`
 	HomeAddress string `json:"home_address"`
@@ -42,15 +42,15 @@ func TestCallProcedure(t *testing.T) {
 		fmt.Println("err:", err)
 	}
 	//session := MySQL().NewSession()
-
-	//contact := new(Contact)
-	//columns := []string{"name", "age", "phone_number", "home_address"}
 	//
-	//_, err = session.Where("name = ?", "付明明").Cols(columns...).Get(contact)
+	//contact := new(Contact)
+	//columns := []string{"real_name", "age", "phone_number", "home_address"}
+	//
+	//_, err = session.Where("real_name = ?", "付明明").Cols(columns...).Get(contact)
 	//if err != nil {
 	//	fmt.Println("err2:", err)
 	//} else {
-	//	fmt.Println("contact:", contact)
+	//	fmt.Println("contact:", *contact)
 	//}
 	//
 	//sql, i := session.LastSQL()
@@ -86,7 +86,7 @@ func TestCallProcedure(t *testing.T) {
 	//	fmt.Println("endtime:", log.EndTime)
 	//}
 
-	//result, err := CallProcedure("query_contact", 1, 5).InParams("付明明").Query()
+	//result, err := CallProcedure("query_contact", 1, 6).InParams("付明明").Query()
 	//if err != nil {
 	//	fmt.Println("err:", err)
 	//}
@@ -106,7 +106,7 @@ func TestCallProcedure(t *testing.T) {
 	}
 
 	//contactList := make([]Contact, 0)
-	//err = CallProcedure("query_student", 1, 9).InParams("付明明1").Find(&contactList)
+	//err = CallProcedure("query_contact", 1, 6).InParams("付明明").Find(&contactList)
 	//if err != nil {
 	//	fmt.Println("err:", err)
 	//}
