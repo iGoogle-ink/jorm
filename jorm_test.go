@@ -28,7 +28,7 @@ create table contact
 
 type Contact struct {
 	UserId      int    `json:"user_id"`
-	RealName    string `json:"real_name" jorm:"real_name"`
+	RealName    string `json:"name" jorm:"real_name"`
 	Age         int    `json:"age"`
 	PhoneNumber string `json:"phone_number"`
 	HomeAddress string `json:"home_address"`
