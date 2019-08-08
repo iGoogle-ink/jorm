@@ -1,8 +1,3 @@
-//==================================
-//  * Name：Jerry
-//  * Tel：18017448610
-//  * DateTime：2019/1/18 19:09
-//==================================
 package jorm
 
 type jMap map[string]interface{}
