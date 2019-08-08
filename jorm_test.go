@@ -10,22 +10,6 @@ import (
 	"testing"
 )
 
-/*
-create table contact
-(
-  id              int auto_increment
-    primary key,
-  name            varchar(10) null comment '姓名',
-  age             int         null comment '年龄',
-  gender          char        null comment '性别<男、女>',
-  phone_number    varchar(15) null comment '电话号码',
-  qq_number       varchar(15) null comment 'QQ号码',
-  wx_number       varchar(20) null comment '微信号码',
-  home_address    varchar(50) null comment '家庭住址',
-  company_address varchar(50) null comment '公司地址'
-);
-*/
-
 type Contact struct {
 	UserId      int    `json:"user_id"`
 	Name        string `json:"name" jorm:"real_name" xorm:"real_name"`
