@@ -7,8 +7,6 @@ package jorm
 
 import (
 	"fmt"
-	"gitlab.iguiyu.com/park/struct/model"
-	"log"
 	"testing"
 )
 
@@ -29,14 +27,16 @@ create table contact
 */
 
 type Contact struct {
-	RealName    string `json:"real_name" jorm:"name"`
+	UserId      int    `json:"user_id"`
+	RealName    string `json:"real_name" jorm:"real_name"`
 	Age         int    `json:"age"`
 	PhoneNumber string `json:"phone_number"`
 	HomeAddress string `json:"home_address"`
+	CreateTime  string `json:"create_time"`
 }
 
 func TestCallProcedure(t *testing.T) {
-	err := InitMySQL("root:Ming521.@tcp(jerry.igoogle.ink:3306)/db_test?charset=utf8")
+	err := InitMySQL("jerry:Ming521.@tcp(jerry.igoogle.ink:3306)/db_test?charset=utf8")
 	//err := InitMySQL("developer:Iloveguiyu2018!@tcp(rm-uf6sl3y5zl5mku48jho.mysql.rds.aliyuncs.com:3306)/lock_test?charset=utf8")
 	if err != nil {
 		fmt.Println("err:", err)
@@ -86,7 +86,7 @@ func TestCallProcedure(t *testing.T) {
 	//	fmt.Println("endtime:", log.EndTime)
 	//}
 
-	//result, err := CallProcedure("query_student", 1, 9).InParams("付明明").Query()
+	//result, err := CallProcedure("query_contact", 1, 5).InParams("付明明").Query()
 	//if err != nil {
 	//	fmt.Println("err:", err)
 	//}
@@ -95,7 +95,7 @@ func TestCallProcedure(t *testing.T) {
 	//}
 
 	contact := new(Contact)
-	has, err := CallProcedure("query_student", 1, 9).InParams("付明明").Get(contact)
+	has, err := CallProcedure("query_contact", 1, 6).InParams("付明明").Get(contact)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -105,26 +105,25 @@ func TestCallProcedure(t *testing.T) {
 		fmt.Println("没有查到需要的数据")
 	}
 
-	contactList := make([]Contact, 0)
-	err = CallProcedure("query_student", 1, 9).InParams("付明明1").Find(&contactList)
-	if err != nil {
-		fmt.Println("err:", err)
-	}
-	fmt.Println("contactList:", contactList)
-
+	//contactList := make([]Contact, 0)
+	//err = CallProcedure("query_student", 1, 9).InParams("付明明1").Find(&contactList)
+	//if err != nil {
+	//	fmt.Println("err:", err)
+	//}
+	//fmt.Println("contactList:", contactList)
 }
 
-func TestDbSearch(t *testing.T) {
-	err := InitMySQL("root:password@tcp(rm-uf6sl3y5zl5mku48jho.mysql.rds.aliyuncs.com:3306)/lock_test?charset=utf8")
-	if err != nil {
-		fmt.Println("err:", err)
-	}
-
-	poleLogList := make([]model.PoleLog, 0)
-	err = MySQL().Where("plate_number = ?", "苏E6PS87").And("start_time < ?", "2019-02-14 13:31:44").And("pay_status = 0 or status = 'IN'").Find(&poleLogList)
-	if len(poleLogList) > 0 {
-		for _, v := range poleLogList {
-			log.Println("VVV：", v)
-		}
-	}
-}
+//func TestDbSearch(t *testing.T) {
+//	err := InitMySQL("root:password@tcp(rm-uf6sl3y5zl5mku48jho.mysql.rds.aliyuncs.com:3306)/lock_test?charset=utf8")
+//	if err != nil {
+//		fmt.Println("err:", err)
+//	}
+//
+//	poleLogList := make([]model.PoleLog, 0)
+//	err = MySQL().Where("plate_number = ?", "苏E6PS87").And("start_time < ?", "2019-02-14 13:31:44").And("pay_status = 0 or status = 'IN'").Find(&poleLogList)
+//	if len(poleLogList) > 0 {
+//		for _, v := range poleLogList {
+//			log.Println("VVV：", v)
+//		}
+//	}
+//}
