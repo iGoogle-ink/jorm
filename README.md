@@ -64,7 +64,7 @@ $ go get -u github.com/iGoogle-ink/jorm
 ## 一、初始化连接MySQL数据库
  在项目运行init中初始化
 ```go
-err := jorm.InitMySQL("root:password@tcp(jerry.igoogle.ink:3306)/db_test?charset=utf8&parseTime=true&loc=Local")
+err := jorm.InitMySQL("root:password@tcp(jerry.igoogle.ink:3306)/db_test?charset=utf8") //&parseTime=true&loc=Local
 if err != nil {
 	fmt.Println("err:", err)
 }
