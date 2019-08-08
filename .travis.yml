@@ -1,0 +1,10 @@
+language: go
+
+go:
+  - tip
+
+install:
+  - go get -u github.com/iGoogle-ink/jorm
+
+script:
+  - go test ./...
