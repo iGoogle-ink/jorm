@@ -7,7 +7,8 @@
 
 <a href="https://www.igoogle.ink" target="_blank"><img src="https://img.shields.io/badge/Author-Jerry-blue.svg"/></a>
 <a href="https://golang.org" target="_blank"><img src="https://img.shields.io/badge/Golang-1.11+-brightgreen.svg"/></a>
-<img src="https://img.shields.io/badge/Build-passing-brightgreen.svg"/>
+<img src="https://api.travis-ci.org/iGoogle-ink/jorm.svg?branch=master"/>
+<a href="http://creativecommons.org/licenses/BSD" target="_blank"><img src="https://img.shields.io/badge/License-BSD-blue.svg"/></a>
 
 ### 引用说明：项目使用数据库ORM xorm（附地址）
 * [https://github.com/go-xorm/xorm](https://github.com/go-xorm/xorm)
