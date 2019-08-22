@@ -45,6 +45,12 @@ func convertValue(fieldType reflect.Type, strValue string) (value reflect.Value,
 		if err != nil {
 			return defReturn, fmt.Errorf("转换 %s 为 int 类型出错: %s", strValue, err.Error())
 		}
+	case reflect.Int32:
+		i, err := strconv.Atoi(strValue)
+		if err != nil {
+			return defReturn, fmt.Errorf("转换 %s to int32 类型出错: %s", strValue, err.Error())
+		}
+		result = int32(i)
 	case reflect.Int64:
 		i, err := strconv.Atoi(strValue)
 		if err != nil {
@@ -62,7 +68,7 @@ func convertValue(fieldType reflect.Type, strValue string) (value reflect.Value,
 		if err != nil {
 			return defReturn, fmt.Errorf("转换 %s 为 float64 类型出错: %s", strValue, err.Error())
 		}
-		result = float64(f)
+		result = f
 	case reflect.String:
 		result = strValue
 	default:
