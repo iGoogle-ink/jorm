@@ -1,9 +1,7 @@
 
 # jorm
 
-
 ## 在 [xorm](https://github.com/go-xorm/xorm) 基础上,增加了调用 “MySQL存储过程” 的功能。
-
 
 <a href="https://www.igoogle.ink" target="_blank"><img src="https://img.shields.io/badge/Author-Jerry-blue.svg"/></a>
 <a href="https://golang.org" target="_blank"><img src="https://img.shields.io/badge/Golang-1.11+-brightgreen.svg"/></a>
